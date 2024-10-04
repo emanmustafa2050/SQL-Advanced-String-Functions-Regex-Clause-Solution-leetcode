@@ -1,10 +1,21 @@
 # Write your MySQL query statement below
+/*   using limit 
 SELECT
     (SELECT DISTINCT salary 
      FROM Employee 
      ORDER BY salary DESC 
      LIMIT 1 OFFSET 1
 ) AS SecondHighestSalary; 
+*/
+SELECT COALESCE(( 
+    SELECT distinct salary
+    FROM (
+        SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS salary_rank
+        FROM Employee
+    ) ranked_salaries
+    WHERE salary_rank = 2
+), NULL) AS SecondHighestSalary;
+
 
 /*
 
